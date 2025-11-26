@@ -149,27 +149,7 @@ export default function PresenterDashboard() {
   return (
     <div className="space-y-8">
 
-      {/* Stats Overview */}
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
-        <div className="bg-white p-6 rounded-2xl shadow-sm border border-gray-100">
-          <div className="text-sm font-medium text-gray-500 mb-1">Total Sessions</div>
-          <div className="text-3xl font-bold text-gray-900">{stats.totalSessions}</div>
-        </div>
-        <div className="bg-white p-6 rounded-2xl shadow-sm border border-gray-100">
-          <div className="text-sm font-medium text-gray-500 mb-1">Total Responses</div>
-          <div className="text-3xl font-bold text-gray-900">{stats.totalResponses}</div>
-        </div>
-        <div className="bg-white p-6 rounded-2xl shadow-sm border border-gray-100">
-          <div className="text-sm font-medium text-gray-500 mb-1">Avg. Engagement</div>
-          <div className="text-3xl font-bold text-gray-900">{stats.avgEngagement}%</div>
-          <div className="text-xs text-gray-400 mt-1">Overall response rate</div>
-        </div>
-        <div className="bg-white p-6 rounded-2xl shadow-sm border border-gray-100">
-          <div className="text-sm font-medium text-gray-500 mb-1">Completion Rate</div>
-          <div className="text-3xl font-bold text-gray-900">{stats.completionRate}%</div>
-          <div className="text-xs text-gray-400 mt-1">Fully completed forms</div>
-        </div>
-      </div>
+
 
       {/* Sessions Grid */}
       <div>
