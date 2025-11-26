@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
-
+import authImage from "../assets/auth.png";
 export default function Signup() {
   const { signup } = useAuth();
   const nav = useNavigate();
@@ -29,19 +29,20 @@ export default function Signup() {
   return (
     <div className="min-h-screen flex bg-white">
       {/* LEFT IMAGE SECTION */}
-      <div className="hidden md:flex w-1/2 relative overflow-hidden rounded-r-3xl">
+      <div className="hidden md:flex w-1/2 relative overflow-hidden rounded-3xl m-4">
+
         <img
-          src="/mnt/data/Gemini Generated Image (1).png"
+          src={authImage}
           className="absolute inset-0 w-full h-full object-cover scale-110 blur-sm brightness-50"
         />
 
         <div className="absolute bottom-10 left-10 text-white px-4">
           <h2 className="text-3xl font-semibold mb-4">
-            Manage Properties Efficiently
+            Manage Feedbacks Efficiently
           </h2>
           <p className="max-w-sm text-gray-200">
-            Easily track rent payments, maintenance requests, and tenant
-            communications in one place.
+            Easily track feedback, maintenance, and
+            responses in one place.
           </p>
         </div>
       </div>
@@ -52,7 +53,7 @@ export default function Signup() {
           <h1 className="text-3xl font-bold text-gray-900 mb-2">
             Create Your Account
           </h1>
-          <p className="text-gray-500 mb-6">Join Real Nest today</p>
+          <p className="text-gray-500 mb-6">Join Formiqa today</p>
 
           {err && <p className="text-red-600 mb-3">{err}</p>}
 
@@ -81,7 +82,7 @@ export default function Signup() {
             />
 
             <button
-              className="w-full bg-blue-600 text-white py-3 rounded-full text-lg hover:bg-blue-700"
+              className="w-full bg-primary text-white py-3 rounded-full text-lg hover:bg-primary/80"
               disabled={loading}
             >
               {loading ? "Creating..." : "Sign Up"}
@@ -90,7 +91,7 @@ export default function Signup() {
 
           <p className="text-center text-sm mt-8 text-gray-600">
             Already have an account?{" "}
-            <Link to="/login" className="text-blue-600 font-semibold">
+            <Link to="/login" className="text-primary font-semibold">
               Login
             </Link>
           </p>

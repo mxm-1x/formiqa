@@ -4,6 +4,7 @@ export declare const createSession: (req: AuthRequest, res: Response) => Promise
 export declare const getSessionByCode: (req: Request, res: Response) => Promise<Response<any, Record<string, any>>>;
 export declare const listSessions: (req: AuthRequest, res: Response) => Promise<Response<any, Record<string, any>>>;
 export declare const endSession: (req: AuthRequest, res: Response) => Promise<Response<any, Record<string, any>>>;
+export declare const deleteSession: (req: AuthRequest, res: Response) => Promise<Response<any, Record<string, any>>>;
 /**
  * GET /api/sessions/:id/analytics
  * Returns:
@@ -13,5 +14,4 @@ export declare const endSession: (req: AuthRequest, res: Response) => Promise<Re
  *  - topEmojis (map)
  *  - feedbackPerMinute (last N minutes)
  */
-export declare const getAnalytics: (req: AuthRequest, res: Response) => Promise<Response<any, Record<string, any>>>;
 //# sourceMappingURL=sessionController.d.ts.map

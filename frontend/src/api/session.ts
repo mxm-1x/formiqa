@@ -11,5 +11,5 @@ export const getSessionByCode = (code: string) => api.get(`/api/sessions/code/${
 export const getSessionFeedbacks = (id: string, token?: string) =>
   api.get(`/api/sessions/${id}/feedbacks`, { headers: { Authorization: `Bearer ${token}` } });
 
-export const getAnalytics = (id: string, token?: string) =>
-  api.get(`/api/sessions/${id}/analytics`, { headers: { Authorization: `Bearer ${token}` } });
+export const deleteSession = (id: string, token?: string) =>
+  api.delete(`/api/sessions/${id}`, { headers: { Authorization: `Bearer ${token}` } });

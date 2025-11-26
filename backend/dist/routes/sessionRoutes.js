@@ -5,6 +5,7 @@ const express_1 = require("express");
 const sessionController_1 = require("../controllers/sessionController");
 const authMiddleware_1 = require("../middleware/authMiddleware");
 const sessionFeedbackController_1 = require("../controllers/sessionFeedbackController");
+const analyticsController_1 = require("../controllers/analyticsController");
 const router = (0, express_1.Router)();
 // POST /api/sessions -> create
 router.post("/", authMiddleware_1.authMiddleware, sessionController_1.createSession);
@@ -14,10 +15,12 @@ router.get("/", authMiddleware_1.authMiddleware, sessionController_1.listSession
 router.get("/code/:code", sessionController_1.getSessionByCode);
 // GET /api/sessions/:id/feedbacks -> list feedbacks for session (presenter)
 router.get("/:id/feedbacks", authMiddleware_1.authMiddleware, sessionFeedbackController_1.getSessionFeedbacks);
-// GET /api/sessions/:id/analytics -> analytics
-router.get("/:id/analytics", authMiddleware_1.authMiddleware, sessionController_1.getAnalytics);
 // POST /api/sessions/:id/end -> end session
 router.post("/:id/end", authMiddleware_1.authMiddleware, sessionController_1.endSession);
+// GET /api/sessions/:id/analytics -> get session analytics
+router.get("/:id/analytics", authMiddleware_1.authMiddleware, analyticsController_1.getSessionAnalytics);
+// DELETE /api/sessions/:id -> delete session
+router.delete("/:id", authMiddleware_1.authMiddleware, sessionController_1.deleteSession);
 router.get("/", authMiddleware_1.authMiddleware, sessionController_1.listSessions);
 exports.default = router;
 //# sourceMappingURL=sessionRoutes.js.map

@@ -1,8 +1,9 @@
 // src/routes/sessionRoutes.ts
 import { Router } from "express";
-import { createSession, getSessionByCode, endSession, listSessions, getAnalytics } from "../controllers/sessionController";
+import { createSession, getSessionByCode, endSession, listSessions, deleteSession } from "../controllers/sessionController";
 import { authMiddleware } from "../middleware/authMiddleware";
 import { getSessionFeedbacks } from "../controllers/sessionFeedbackController";
+import { getSessionAnalytics } from "../controllers/analyticsController";
 
 
 const router = Router();
@@ -19,11 +20,14 @@ router.get("/code/:code", getSessionByCode);
 // GET /api/sessions/:id/feedbacks -> list feedbacks for session (presenter)
 router.get("/:id/feedbacks", authMiddleware, getSessionFeedbacks);
 
-// GET /api/sessions/:id/analytics -> analytics
-router.get("/:id/analytics", authMiddleware, getAnalytics);
-
 // POST /api/sessions/:id/end -> end session
 router.post("/:id/end", authMiddleware, endSession);
+
+// GET /api/sessions/:id/analytics -> get session analytics
+router.get("/:id/analytics", authMiddleware, getSessionAnalytics);
+
+// DELETE /api/sessions/:id -> delete session
+router.delete("/:id", authMiddleware, deleteSession);
 router.get("/", authMiddleware, listSessions);
 
 export default router;

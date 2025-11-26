@@ -9,6 +9,8 @@ import JoinSession from "./pages/JoinSession";
 import ViewerFeedback from "./pages/ViewerFeedback";
 import { AuthProvider, useAuth } from "./context/AuthContext";
 import { SocketProvider } from "./context/SocketContext";
+import DashboardLayout from "./components/DashboardLayout";
+import Settings from "./pages/Settings";
 import Landing from "./pages/Landing";
 
 const PrivateRoute = ({ children }: { children: JSX.Element }) => {
@@ -29,26 +31,15 @@ export default function App() {
             path="/presenter"
             element={
               <PrivateRoute>
-                <PresenterDashboard />
+                <DashboardLayout />
               </PrivateRoute>
             }
-          />
-          <Route
-            path="/presenter/create"
-            element={
-              <PrivateRoute>
-                <CreateSession />
-              </PrivateRoute>
-            }
-          />
-          <Route
-            path="/presenter/session/:id"
-            element={
-              <PrivateRoute>
-                <LiveSession />
-              </PrivateRoute>
-            }
-          />
+          >
+            <Route index element={<PresenterDashboard />} />
+            <Route path="create" element={<CreateSession />} />
+            <Route path="session/:id" element={<LiveSession />} />
+            <Route path="settings" element={<Settings />} />
+          </Route>
 
           <Route path="/join" element={<JoinSession />} />
           <Route path="/join/:code" element={<ViewerFeedback />} />

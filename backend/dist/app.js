@@ -12,11 +12,13 @@ const authRoutes_1 = __importDefault(require("./routes/authRoutes"));
 const sessionRoutes_1 = __importDefault(require("./routes/sessionRoutes"));
 const feedbackRoutes_1 = __importDefault(require("./routes/feedbackRoutes"));
 const rateMiddleware_1 = require("./middleware/rateMiddleware");
+const questionRoutes_1 = __importDefault(require("./routes/questionRoutes"));
 const app = (0, express_1.default)();
 app.use((0, cors_1.default)({ origin: process.env.FRONTEND_URL || "*" }));
 app.use(express_1.default.json());
 // health
 app.get("/healthz", (req, res) => res.send({ status: "ok" }));
+app.use("/api", questionRoutes_1.default);
 app.use("/api/auth", authRoutes_1.default);
 app.use("/api/sessions", sessionRoutes_1.default);
 // apply rate limiter ONLY to the POST feedback route

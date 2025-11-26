@@ -1,9 +1,8 @@
 // src/controllers/sessionController.ts
 import { Request, Response } from "express";
-import  prisma  from "../db/prisma";
+import prisma from "../db/prisma";
 import { generateSessionCode } from "../utils/generateCode";
 import { AuthRequest } from "../middleware/authMiddleware";
-import { subMinutes } from "date-fns";
 
 export const createSession = async (req: AuthRequest, res: Response) => {
   try {
@@ -13,9 +12,15 @@ export const createSession = async (req: AuthRequest, res: Response) => {
 
     let code = generateSessionCode();
     let exists = await prisma.session.findUnique({ where: { code } });
-    while (exists) {
+    let retries = 0;
+    while (exists && retries < 5) {
       code = generateSessionCode();
       exists = await prisma.session.findUnique({ where: { code } });
+      retries++;
+    }
+
+    if (exists) {
+      return res.status(500).json({ error: "Failed to generate unique session code" });
     }
 
     const session = await prisma.session.create({
@@ -113,6 +118,48 @@ export const endSession = async (req: AuthRequest, res: Response) => {
   }
 };
 
+export const deleteSession = async (req: AuthRequest, res: Response) => {
+  try {
+    if (!req.user) return res.status(401).json({ error: "Unauthorized" });
+
+    const { id } = req.params;
+    if (!id) return res.status(400).json({ error: "Invalid session id" });
+
+    const session = await prisma.session.findUnique({ where: { id } });
+    if (!session) return res.status(404).json({ error: "Session not found" });
+    if (session.userId !== req.user.id) return res.status(403).json({ error: "Forbidden" });
+
+    // Delete all responses associated with questions in this session
+    await prisma.response.deleteMany({
+      where: {
+        question: {
+          sessionId: id
+        }
+      }
+    });
+
+    // Delete all questions associated with this session
+    await prisma.question.deleteMany({
+      where: { sessionId: id }
+    });
+
+    // Delete all feedback associated with this session
+    await prisma.feedback.deleteMany({
+      where: { sessionId: id }
+    });
+
+    // Finally delete the session
+    await prisma.session.delete({
+      where: { id }
+    });
+
+    return res.json({ message: "Session deleted successfully" });
+  } catch (err: any) {
+    console.error("deleteSession error:", err);
+    return res.status(500).json({ error: "Internal server error" });
+  }
+};
+
 /**
  * GET /api/sessions/:id/analytics
  * Returns:
@@ -122,93 +169,6 @@ export const endSession = async (req: AuthRequest, res: Response) => {
  *  - topEmojis (map)
  *  - feedbackPerMinute (last N minutes)
  */
-export const getAnalytics = async (req: AuthRequest, res: Response) => {
-  try {
-    const { id } = req.params;
-    if (!id) return res.status(400).json({ error: "Invalid session id" });
 
-    const minutesWindow = Number(req.query.minutes) || 30;
-
-    if (!req.user) return res.status(401).json({ error: "Unauthorized" });
-
-    const session = await prisma.session.findUnique({ where: { id } });
-    if (!session) return res.status(404).json({ error: "Session not found" });
-    if (session.userId !== req.user.id) return res.status(403).json({ error: "Forbidden" });
-
-    const totalFeedback = await prisma.feedback.count({ where: { sessionId: id } });
-
-    // Average sentiment
-    const avgAgg = await prisma.feedback.aggregate({
-      where: { sessionId: id, sentimentScore: { not: null } },
-      _avg: { sentimentScore: true },
-    });
-
-    const avgSentiment = avgAgg._avg.sentimentScore ?? 0;
-
-    // Counts by feedback type
-    const countsByType = await prisma.$queryRaw<
-      Array<{ type: string; cnt: number }>
-    >`SELECT "type", COUNT(*) as cnt
-      FROM "Feedback"
-      WHERE "sessionId" = ${id}
-      GROUP BY "type"`;
-
-    // Top emojis
-    const topEmojis = await prisma.$queryRaw<
-      Array<{ emoji: string; cnt: number }>
-    >`SELECT emoji, COUNT(*) as cnt
-      FROM "Feedback"
-      WHERE "sessionId" = ${id}
-        AND emoji IS NOT NULL
-      GROUP BY emoji
-      ORDER BY cnt DESC
-      LIMIT 10`;
-
-    // Timeseries (past N minutes)
-    const since = subMinutes(new Date(), minutesWindow);
-
-    const rawTimes = await prisma.$queryRaw<
-      Array<{ period: Date; cnt: number }>
-    >`SELECT date_trunc('minute', "createdAt") AS period,
-              COUNT(*) as cnt
-        FROM "Feedback"
-        WHERE "sessionId" = ${id}
-          AND "createdAt" >= ${since}
-        GROUP BY period
-        ORDER BY period ASC`;
-
-    // Build consistent minute-by-minute timeseries
-    const timeseries: Array<{ minute: string; count: number }> = [];
-
-    for (let i = 0; i <= minutesWindow; i++) {
-      const minuteDate = new Date(since.getTime() + i * 60000);
-
-      // Key format: YYYY-MM-DDTHH:mm
-      const key = minuteDate.toISOString().slice(0, 16);
-
-      // Find match — convert period to ISO safely
-      const found = rawTimes.find((r) => {
-        const p = r.period instanceof Date ? r.period.toISOString() : String(r.period);
-        return p.slice(0, 16) === key;
-      });
-
-      timeseries.push({
-        minute: key,
-        count: found ? Number(found.cnt) : 0,
-      });
-    }
-
-    return res.json({
-      totalFeedback,
-      avgSentiment,
-      countsByType,
-      topEmojis,
-      timeseries,
-    });
-  } catch (err) {
-    console.error("getAnalytics error:", err);
-    return res.status(500).json({ error: "Internal server error" });
-  }
-};
 
 

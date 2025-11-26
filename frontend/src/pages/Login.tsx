@@ -29,7 +29,7 @@ export default function Login() {
     return (
         <div className="min-h-screen flex bg-white">
             {/* LEFT IMAGE SECTION */}
-<div className="hidden md:flex w-1/2 relative overflow-hidden rounded-3xl m-4">
+            <div className="hidden md:flex w-1/2 relative overflow-hidden rounded-3xl m-4">
                 <img
                     src={authImage}
                     className="absolute inset-0 w-full h-full object-cover scale-110 brightness-50"
@@ -37,10 +37,10 @@ export default function Login() {
 
                 <div className="absolute bottom-10 left-10 text-white px-4">
                     <h2 className="text-3xl font-semibold mb-4">
-                        Manage Properties Efficiently
+                        Manage Feedbacks Efficiently
                     </h2>
                     <p className="max-w-sm text-gray-200">
-                        Easily track rent payments, maintenance requests, and tenant
+                        Easily track feedback, maintenance, and
                         communications in one place. Say goodbye to the hassle of manual
                         management.
                     </p>
@@ -51,7 +51,7 @@ export default function Login() {
             <div className="w-full md:w-1/2 flex items-center justify-center px-6">
                 <div className="w-full max-w-md">
                     <h1 className="text-3xl font-bold text-gray-900 mb-2">
-                        Welcome Back to Real Nest!
+                        Welcome Back to Formiqa!
                     </h1>
                     <p className="text-gray-500 mb-6">Sign in to your account</p>
 
@@ -76,21 +76,10 @@ export default function Login() {
                             onChange={(e) => setPassword(e.target.value)}
                         />
 
-                        {/* OPTIONS */}
-                        <div className="flex items-center justify-between text-sm text-gray-600">
-                            <label className="flex items-center gap-2">
-                                <input type="checkbox" className="w-4 h-4" />
-                                Remember Me
-                            </label>
-
-                            <a href="#" className="hover:underline">
-                                Forgot Password?
-                            </a>
-                        </div>
 
                         {/* LOGIN BUTTON */}
                         <button
-                            className="w-full bg-blue-600 text-white py-3 rounded-full text-lg hover:bg-blue-700"
+                            className="w-full bg-primary text-white py-3 rounded-full text-lg hover:bg-primary/80"
                             disabled={loading}
                         >
                             {loading ? "Logging in..." : "Login"}
@@ -106,7 +95,7 @@ export default function Login() {
                     </div>
 
                     {/* SOCIAL LOGIN */}
-                    <div className="flex gap-4">
+                    {/* <div className="flex gap-4">
                         <button className="flex-1 border py-3 rounded-full flex items-center justify-center gap-2">
                             <img
                                 src="https://www.svgrepo.com/show/355037/google.svg"
@@ -122,12 +111,12 @@ export default function Login() {
                             />
                             Sign in with Apple
                         </button>
-                    </div>
+                    </div> */}
 
                     {/* REGISTER */}
                     <p className="text-center text-sm mt-8 text-gray-600">
                         Don’t have an account?{" "}
-                        <Link to="/signup" className="text-blue-600 font-semibold">
+                        <Link to="/signup" className="text-primary font-semibold">
                             Register
                         </Link>
                     </p>

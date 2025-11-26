@@ -8,6 +8,7 @@ import authRoutes from "./routes/authRoutes";
 import sessionRoutes from "./routes/sessionRoutes";
 import feedbackRoutes from "./routes/feedbackRoutes";
 import { feedbackRateLimiter } from "./middleware/rateMiddleware";
+import questionRoutes from "./routes/questionRoutes";
 
 const app = express();
 
@@ -17,6 +18,7 @@ app.use(express.json());
 // health
 app.get("/healthz", (req, res) => res.send({ status: "ok" }));
 
+app.use("/api", questionRoutes);
 app.use("/api/auth", authRoutes);
 app.use("/api/sessions", sessionRoutes);
 

@@ -34,6 +34,9 @@ model Session {
   createdAt  DateTime  @default(now())
   endedAt    DateTime?
   feedback   Feedback[]
+  questions Question[]
+
+  @@index([userId])
 }
 
 model Feedback {
@@ -45,4 +48,48 @@ model Feedback {
   message        String?
   sentimentScore Float?
   createdAt      DateTime  @default(now())
+
+  @@index([sessionId])
+  @@index([createdAt])
+}
+
+model Question {
+  id         String    @id @default(uuid())
+  sessionId  String
+  session    Session   @relation(fields: [sessionId], references: [id])
+  type       String    // "text" | "mcq"
+  title      String
+  // For MCQ we store options as a string array
+  options    String[]  @default([])
+  isActive   Boolean   @default(true)
+  createdAt  DateTime  @default(now())
+  endedAt    DateTime?
+  responses  Response[]
+
+  @@index([sessionId])
+}
+
+model Response {
+  id          String    @id @default(uuid())
+  questionId  String
+  question    Question  @relation(fields: [questionId], references: [id])
+  // For MCQ responses we store selectedOption index or label
+  selectedOpt  String?   // option label (e.g. "A" or "Choice text")
+  textAnswer   String?   // for text responses
+  sentimentScore Float?  // optional sentiment for text
+  createdAt    DateTime  @default(now())
+
+  @@index([questionId])
+}
+
+model ActivityLog {
+  id         String   @id @default(uuid())
+  sessionId  String
+  activityType String // "feedback" | "response" | "presence_join" | "presence_leave"
+  metadata   Json?   // Store any additional data (questionId, selectedOpt, emoji, etc.)
+  createdAt  DateTime @default(now())
+
+  @@index([sessionId])
+  @@index([createdAt])
+  @@index([activityType])
 }

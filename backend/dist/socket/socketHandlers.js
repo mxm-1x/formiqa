@@ -42,12 +42,26 @@ const registerSocketHandlers = (io) => {
                 // presence count
                 const count = (await io.in(room).fetchSockets()).length;
                 io.to(room).emit("presence-update", { onlineCount: count });
+                // Fetch active questions
+                const activeQuestions = await prisma_1.default.question.findMany({
+                    where: { sessionId: session.id, isActive: true },
+                    orderBy: { createdAt: "desc" },
+                });
                 socket.emit("session-joined", {
                     session: {
                         id: session.id,
                         code: session.code,
-                        title: session.title,
+                        title: session.title || "",
                     },
+                    activeQuestions: activeQuestions.map(q => ({
+                        id: q.id,
+                        sessionId: q.sessionId,
+                        type: q.type,
+                        title: q.title,
+                        options: q.options,
+                        isActive: q.isActive,
+                        createdAt: q.createdAt,
+                    })),
                 });
                 console.log(`Socket ${socket.id} joined ${room}`);
             }
@@ -74,8 +88,14 @@ const registerSocketHandlers = (io) => {
                 // Sentiment analysis
                 let sentimentScore = null;
                 if (message && message.length > 0) {
-                    const result = sentiment.analyze(message);
-                    sentimentScore = result.score;
+                    try {
+                        const result = sentiment.analyze(message);
+                        sentimentScore = result.score;
+                    }
+                    catch (e) {
+                        console.error("Sentiment analysis failed:", e);
+                        // continue without score
+                    }
                 }
                 const feedback = await prisma_1.default.feedback.create({
                     data: {
@@ -93,7 +113,7 @@ const registerSocketHandlers = (io) => {
                     emoji: feedback.emoji,
                     message: feedback.message,
                     sentimentScore: feedback.sentimentScore,
-                    createdAt: feedback.createdAt,
+                    createdAt: feedback.createdAt.toISOString(),
                 };
                 // Broadcast to all presenter dashboards
                 io.to(room).emit("new-feedback", payload);

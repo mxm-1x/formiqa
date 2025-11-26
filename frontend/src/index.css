@@ -2,5 +2,37 @@
 @tailwind components;
 @tailwind utilities;
 
-.input { @apply w-full p-2 border rounded; }
-.btn { @apply px-4 py-2 bg-indigo-600 text-white rounded hover:bg-indigo-700; }
+@layer base {
+  * {
+    @apply transition-colors duration-200;
+  }
+}
+
+@layer components {
+  .input { @apply w-full p-2 border rounded; }
+  .btn { @apply px-4 py-2 bg-primary text-white rounded hover:bg-primary/80; }
+  
+  /* Micro-interaction classes */
+  .hover-lift {
+    @apply transition-all duration-300 hover:shadow-lg;
+  }
+  
+  .hover-glow {
+    @apply transition-all duration-300 hover:shadow-lg hover:shadow-primary/20;
+  }
+  
+  .animate-count-up {
+    animation: countUp 0.5s ease-out;
+  }
+  
+  @keyframes countUp {
+    from {
+      opacity: 0;
+      transform: translateY(10px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+}
