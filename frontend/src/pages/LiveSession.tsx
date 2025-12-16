@@ -198,12 +198,12 @@ export default function LiveSession() {
 
         {/* Header Section */}
         <motion.div
-          className="bg-white/80 backdrop-blur-xl rounded-3xl shadow-sm border border-gray-100 p-6 relative overflow-hidden"
+          className="bg-white/80 backdrop-blur-xl rounded-3xl shadow-sm border border-gray-100 p-4 sm:p-6 relative overflow-hidden"
           variants={itemVariants}
         >
           <div className="absolute top-0 right-0 w-64 h-64 bg-gradient-to-br from-primary/5 to-transparent rounded-bl-full -mr-20 -mt-20 pointer-events-none" />
 
-          <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-6 relative z-10">
+          <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-6 relative z-10">
             <div>
               <motion.button
                 whileHover={{ x: -5 }}
@@ -215,8 +215,8 @@ export default function LiveSession() {
                 Back to Dashboard
               </motion.button>
 
-              <div className="flex items-center gap-3 mb-1">
-                <h1 className="text-3xl font-bold text-gray-900 tracking-tight">{session?.title || "Live Session"}</h1>
+              <div className="flex flex-wrap items-center gap-3 mb-1">
+                <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 tracking-tight">{session?.title || "Live Session"}</h1>
                 <motion.span
                   className="inline-flex items-center px-3 py-1 rounded-full text-xs font-bold bg-green-100 text-green-700 border border-green-200"
                   animate={{ boxShadow: ["0 0 0 0 rgba(74, 222, 128, 0.4)", "0 0 0 4px rgba(74, 222, 128, 0)"] }}
@@ -230,7 +230,7 @@ export default function LiveSession() {
             </div>
 
             {session && (
-              <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3">
+              <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 w-full lg:w-auto">
                 <div className="bg-gray-50 px-5 py-3 rounded-2xl border border-gray-100 flex flex-col items-center justify-center min-w-[120px]">
                   <div className="text-xs text-gray-500 font-semibold uppercase tracking-wider mb-0.5">Session Code</div>
                   <div className="text-2xl font-mono font-black text-primary tracking-widest">{session.code}</div>
@@ -240,7 +240,7 @@ export default function LiveSession() {
                   whileHover={{ scale: 1.02, backgroundColor: "#f97316" }}
                   whileTap={{ scale: 0.95 }}
                   onClick={copyToClipboard}
-                  className="px-6 py-4 bg-primary text-white rounded-2xl font-bold shadow-lg shadow-primary/25 hover:shadow-xl hover:shadow-primary/30 transition-all flex items-center justify-center gap-2 min-w-[140px]"
+                  className="px-6 py-4 bg-primary text-white rounded-2xl font-bold shadow-lg shadow-primary/25 hover:shadow-xl hover:shadow-primary/30 transition-all flex items-center justify-center gap-2 min-w-[140px] flex-1 sm:flex-none"
                 >
                   <AnimatePresence mode="wait">
                     {copied ? (
