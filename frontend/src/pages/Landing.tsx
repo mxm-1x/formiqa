@@ -124,12 +124,6 @@ export default function Landing() {
             One tool to manage<br />
             <span className="relative inline-block">
               <span className="relative z-10">audience engagement</span>
-              <motion.div
-                initial={{ width: 0 }}
-                animate={{ width: "100%" }}
-                transition={{ delay: 0.8, duration: 0.8 }}
-                className="absolute bottom-2 left-0 h-4 bg-primary/20 -z-0"
-              ></motion.div>
             </span>
           </h1>
 
@@ -141,9 +135,6 @@ export default function Landing() {
             <Link to="/signup" className="w-full sm:w-auto px-8 py-4 bg-gray-900 text-white text-lg font-semibold rounded-full hover:bg-black hover:scale-105 active:scale-95 transition-all duration-300 shadow-xl hover:shadow-2xl">
               Start for Free
             </Link>
-            <button className="w-full sm:w-auto px-8 py-4 bg-white text-gray-900 border border-gray-200 text-lg font-semibold rounded-full hover:bg-gray-50 hover:border-gray-300 transition-all duration-300 flex items-center justify-center gap-2">
-              Get a Demo
-            </button>
           </div>
         </motion.div>
 
